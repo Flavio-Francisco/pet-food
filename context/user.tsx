@@ -10,7 +10,7 @@ import {
 
 type User = {
   name: string;
-  email: string;
+  id: number;
 };
 
 type UserContextType = {
@@ -18,6 +18,8 @@ type UserContextType = {
   getUser: (user: User | null) => void;
   signOutUser: () => void;
   clearCache: () => void;
+  refrech: () => void;
+  Getrefrech: (refrech: () => void) => void;
 };
 
 interface ContextType {
@@ -28,6 +30,7 @@ export const useSession = () => useContext(UserContext);
 
 export function UserProvider({ children }: ContextType) {
   const [user, setUser] = useState<User | null>(null);
+  const [refrech, setRefrech] = useState<() => void>(() => {});
   const router = useRouter();
   async function restoreUserFromCache() {
     const cachedUserData = localStorage.getItem("userData");
@@ -52,12 +55,19 @@ export function UserProvider({ children }: ContextType) {
     localStorage.setItem("userData", JSON.stringify(null));
   }
 
+  function Getrefrech(refrech: () => void) {
+    setRefrech(refrech);
+  }
+
   useEffect(() => {
     restoreUserFromCache();
+    console.log(user);
   }, []); // Executa apenas na montagem inicial
 
   return (
-    <UserContext.Provider value={{ getUser, user, clearCache, signOutUser }}>
+    <UserContext.Provider
+      value={{ getUser, user, clearCache, signOutUser, refrech, Getrefrech }}
+    >
       {children}
     </UserContext.Provider>
   );

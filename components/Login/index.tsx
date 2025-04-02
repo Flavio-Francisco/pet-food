@@ -1,6 +1,6 @@
 "use client";
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { decodeToken } from "@/lib/utils/decodeToken";
+import { useSession } from "@/context/user";
 
 // Definição do schema de validação
 const loginSchema = z.object({
@@ -24,7 +25,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-
+  const { getUser } = useSession();
   const {
     register,
     handleSubmit,
@@ -32,7 +33,7 @@ export default function LoginPage() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-  const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       try {
@@ -49,17 +50,29 @@ export default function LoginPage() {
       }
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], decodeToken(data));
+      getUser(decodeToken(data.token));
       router.push("/dashboard"); // Redireciona após login bem-sucedido
     },
     onError: (error) => {
       console.error("Erro na autenticação:", error);
+      router.push("/");
     },
   });
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <Card className="w-96 shadow-lg">
+        <div className="flex justify-center">
+          <h1 className="text-3xl font-bold shadow shadow-popover">Pet Food</h1>
+        </div>
+        <div className="bg-transparent flex justify-center">
+          <Image
+            src="/image.png"
+            height={300}
+            width={300}
+            alt="Imagem com fundo transparente"
+          />
+        </div>
         <CardHeader>
           <CardTitle>Login</CardTitle>
         </CardHeader>

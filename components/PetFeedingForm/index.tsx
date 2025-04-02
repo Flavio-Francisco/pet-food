@@ -1,30 +1,28 @@
 "use client";
 
+import { getAppellant } from "@/app/servises/appellant";
+import { useSession } from "@/context/user";
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 
-// Tipo para os horários de alimentação
-type FeedingTime = {
-  time: string;
-};
-
-interface PetFeedingCountdownProps {
-  times: FeedingTime[];
-}
-
-const PetFeedingCountdown = ({ times }: PetFeedingCountdownProps) => {
+const PetFeedingCountdown = () => {
   const [tempoRestante, setTempoRestante] = useState({
     dias: 1,
     horas: 0,
     minutos: 0,
     segundos: 0,
   });
-
+  const { user, Getrefrech } = useSession();
+  const { data, refetch } = useQuery({
+    queryKey: ["appellant"],
+    queryFn: () => getAppellant(user?.id || 0),
+  });
   useEffect(() => {
-    if (times.length === 0) return;
-
+    if (!data) return;
+    Getrefrech(refetch);
     const calcularTempoRestante = () => {
       const hoje = new Date();
-      const [horas, minutos] = times[0].time.split(":").map(Number); // Pegando os valores de horas e minutos
+      const [horas, minutos] = data.time.split(":").map(Number); // Pegando os valores de horas e minutos
       const dataInicialDate = new Date(hoje);
       dataInicialDate.setHours(horas, minutos, 0, 0); // Definindo o horário correto
 
@@ -53,7 +51,7 @@ const PetFeedingCountdown = ({ times }: PetFeedingCountdownProps) => {
     calcularTempoRestante(); // Atualiza imediatamente
 
     return () => clearInterval(interval);
-  }, [times]);
+  }, [data]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full  ">

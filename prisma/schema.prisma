@@ -10,14 +10,14 @@ datasource db {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model FoodControl {
-  id               Int       @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   food             Boolean?
-  feedingTime      DateTime? @db.Time(6)
-  feedingTime1     DateTime? @db.Time(6)
-  feedingTime2     DateTime? @db.Time(6)
+  feedingTime      String?
+  feedingTime1     String?
+  feedingTime2     String?
   recurrentFeeding Boolean?
   user_id          Int?
-  User             User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  User             User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

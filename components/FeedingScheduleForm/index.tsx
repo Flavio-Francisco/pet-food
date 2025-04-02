@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
+
 import {
   Select,
   SelectContent,
@@ -12,20 +13,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { updateFoodControl } from "@/app/servises/food";
+import { useSession } from "@/context/user";
 
 export default function FeedingScheduleForm() {
   const [isRecurring, setIsRecurring] = useState(true);
   const [timesPerDay, setTimesPerDay] = useState("1");
   const [feedingTimes, setFeedingTimes] = useState<string[]>([""]);
-
+  const { user, refrech } = useSession();
   const handleTimesChange = (index: number, value: string) => {
     const newTimes = [...feedingTimes];
     newTimes[index] = value;
     setFeedingTimes(newTimes);
   };
 
+  const { mutate } = useMutation({
+    mutationFn: () =>
+      updateFoodControl(user?.id || 0, {
+        recurrentFeeding: isRecurring,
+        times: [
+          { time: feedingTimes[0] || "" },
+          { time: feedingTimes[1] || "" },
+          { time: feedingTimes[2] || "" },
+        ],
+      }),
+    onSuccess(data) {
+      alert(`horário ${data.time} salvo com sucesso!!!`);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
   const handleSubmit = () => {
     console.log({ isRecurring, timesPerDay, feedingTimes });
+    mutate();
+    refrech();
   };
 
   return (
