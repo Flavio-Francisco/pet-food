@@ -6,12 +6,11 @@ import { Menu, X } from "lucide-react";
 import { getWindowWidth } from "../../lib/utils/getWindowWidth";
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [width, setWidth] = useState(() => getWindowWidth());
   const [isOpen, setIsOpen] = useState(() =>
     getWindowWidth() < 760 ? false : true
   );
-  console.log("Lagura", width);
-
   useEffect(() => {
     // Atualiza a largura da janela sempre que a tela for redimensionada
     const handleResize = () => {
@@ -58,7 +57,9 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       </motion.div>
 
       {/* Conteúdo principal */}
-      <div className="flex-1 p-6">{children}</div>
+      <div className="flex justify-center items-center md:ml-20 w-full">
+        {children}
+      </div>
     </div>
   );
 }
