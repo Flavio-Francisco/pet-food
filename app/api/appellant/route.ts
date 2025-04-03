@@ -59,3 +59,33 @@ export async function GET(req: NextRequest) {
       );
     }
   }
+ 
+  
+  export async function PATCH(req: NextRequest) {
+      try {
+          const url = new URL(req.nextUrl.href);
+          const id = url.searchParams.get("id");
+          const food = await req.json();
+  
+          if (!id) {
+              return NextResponse.json({ message: "ID é obrigatório" }, { status: 400 });
+          }
+  
+          const data = await prisma.foodControl.update({
+              where: {
+              id: 1,
+              user_id:Number(id)
+              },
+            data: {
+                food: food.food,
+            }
+          });
+  
+          return NextResponse.json(data);
+      } catch (error) {
+          console.error("Erro no servidor:", error);
+          return NextResponse.json({ message: "Erro interno no servidor", error }, { status: 500 });
+      }
+  }
+  
+
