@@ -50,8 +50,16 @@ export default function LoginPage() {
       }
     },
     onSuccess: (data) => {
-      getUser(decodeToken(data.token));
-      router.push("/dashboard"); // Redireciona após login bem-sucedido
+  
+      if (data?.token) {
+        getUser(decodeToken(data.token));
+        router.push("/dashboard"); // Redireciona após login bem-sucedido
+      } else {
+        console.log(data.response.status);
+        alert("Usúario não encontrado!");
+        router.push("/");
+      }
+ 
     },
     onError: (error) => {
       console.error("Erro na autenticação:", error);
