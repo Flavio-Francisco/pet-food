@@ -12,8 +12,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { decodeToken } from "@/lib/utils/decodeToken";
 import { useSession } from "@/context/user";
+import { useState } from "react"; // Importando o useState
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-// Definição do schema de validação
 const loginSchema = z.object({
   name: z.string({ message: "Nome inválido" }),
   password: z
@@ -26,6 +28,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const { getUser } = useSession();
+  const [showPassword, setShowPassword] = useState(false); // Estado para alternar a senha
+
   const {
     register,
     handleSubmit,
@@ -41,8 +45,7 @@ export default function LoginPage() {
           headers: { "Content-Type": "application/json" },
         });
 
-        console.log("Resposta da API:", response.data); // Exibe os dados retornados
-
+        console.log("Resposta da API:", response.data);
         return response.data;
       } catch (error) {
         console.error("Erro no login:", error);
@@ -50,16 +53,14 @@ export default function LoginPage() {
       }
     },
     onSuccess: (data) => {
-  
       if (data?.token) {
         getUser(decodeToken(data.token));
-        router.push("/dashboard"); // Redireciona após login bem-sucedido
+        router.push("/dashboard");
       } else {
         console.log(data.response.status);
-        alert("Usúario não encontrado!");
+        alert("Usuário não encontrado!");
         router.push("/");
       }
- 
     },
     onError: (error) => {
       console.error("Erro na autenticação:", error);
@@ -97,9 +98,28 @@ export default function LoginPage() {
               )}
             </div>
 
-            <div>
+            {/* Campo de senha com botão de exibir senha */}
+            <div className="relative">
               <Label htmlFor="password">Senha</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"} // Alterna entre texto e senha
+                  {...register("password")}
+                  className="pr-10" // Espaço para o ícone
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={() => setShowPassword(!showPassword)} // Alterna o estado
+                >
+                  {showPassword ? (
+                    <VisibilityOutlinedIcon />
+                  ) : (
+                    <VisibilityOffOutlinedIcon />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-sm">
                   {errors.password.message}
