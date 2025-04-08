@@ -77,8 +77,8 @@ export default function LoginPage() {
         <div className="bg-transparent flex justify-center">
           <Image
             src="/image.png"
-            height={300}
-            width={300}
+            height={200}
+            width={200}
             alt="Imagem com fundo transparente"
           />
         </div>

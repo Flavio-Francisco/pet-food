@@ -24,8 +24,8 @@ export default function HomePage() {
       <div className="bg-transparent flex justify-center">
         <Image
           src="/image.png"
-          height={300}
-          width={300}
+          height={150}
+          width={150}
           alt="Imagem com fundo transparente"
         />
       </div>
