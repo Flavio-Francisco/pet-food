@@ -16,7 +16,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Pet Food",
-  icons: [{ rel: "icon", url: "/pet.png", type: "image/png", sizes: "32x32" }],
+  icons: [
+    { rel: "icon", url: "/pet.png", type: "image/png", sizes: "32x32" },
+    {
+      rel: "apple-touch-icon",
+      url: "/pet.png",
+      type: "image/png",
+      sizes: "180x180",
+    },
+  ],
 };
 
 export default function RootLayout({
