@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Provider from "@/components/Provider";
@@ -18,12 +19,12 @@ export const metadata: Metadata = {
   title: "Pet Food",
   icons: [
     { rel: "icon", url: "/pet.png", type: "image/png", sizes: "32x32" },
-    {
-      rel: "apple-touch-icon",
-      url: "/pet.png",
-      type: "image/png",
-      sizes: "180x180",
-    },
+    // {
+    //   rel: "apple-touch-icon",
+    //   url: "/pet.png",
+    //   type: "image/png",
+    //   sizes: "180x180",
+    // },
   ],
 };
 
@@ -36,6 +37,15 @@ export default function RootLayout({
     <Provider>
       <UserProvider>
         <html lang="pt-br">
+          <Head>
+            <link
+              rel="apple-touch-icon"
+              href="/pet.png?<generated>"
+              type="image/<generated>"
+              sizes="<generated>"
+            />
+          </Head>
+
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
